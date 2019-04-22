@@ -5,7 +5,14 @@ from tensorflow.contrib import layers
 class TextCNN(object):
     @classmethod
     def default_params(cls):
-        return {}
+        return {
+            'embed_type': 'rand',
+            'filter_sizes': [2, 3, 4],
+            "num_filters": 3,
+            "max_seq_length": 20,
+            "default_value": "<pad>",
+            "embedding_vocabulary_size": 128003,
+        }
 
     @classmethod
     def get_model_name(cls):
