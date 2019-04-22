@@ -38,19 +38,19 @@ class TextCNN(object):
         conv_output = self.build_conv_layers(embedding_input)
         label_prob = self.build_fully_connected_layers(conv_output)
 
-        predicted_label_id = self._get_prediction(label_prob)
+        softmax_label_prob = tf.nn.softmax(label_prob)
 
-        predicted_label_str = self.get_label_str(predicted_label_id)
+        predicted_label_id = self._get_prediction(softmax_label_prob)
+
+        mapping_tensor = self.get_mapping_tensor()
+
+        predicted_label_str = self.get_label_str(predicted_label_id, mapping_tensor)
 
         loss = None
         train_op = None
 
         if self.mode != tf.estimator.ModeKeys.PREDICT:
-            tf.print(label_prob)
-            print(label_prob)
-            tf.print(label)
-            print(label)
-            loss = self._build_loss(label_prob, label)
+            loss = self._build_loss(softmax_label_prob, label)
             train_op = self._build_optimizer(loss)
 
         return tf.estimator.EstimatorSpec(
@@ -58,7 +58,7 @@ class TextCNN(object):
             loss=loss,
             train_op=train_op,
             # eval_metric_ops=metrics,
-            predictions={"label": predicted_label_str, "label_prob": label_prob})
+            predictions={"label": predicted_label_str, "label_prob": softmax_label_prob, "label_mapping": mapping_tensor})
 
     def get_int_from_input(self):
         # word to id
@@ -167,9 +167,13 @@ class TextCNN(object):
 
         return train_op
 
-    def get_label_str(self, predicted_label_id):
+    def get_mapping_tensor(self):
         data = self.params['tags_data']
-        mapping_strings = tf.Variable(data)
+        mapping_strings = tf.constant(data)
+
+        return mapping_strings
+
+    def get_label_str(self, predicted_label_id, mapping_strings):
         vocab_tags = tf.contrib.lookup.index_to_string_table_from_tensor(mapping_strings)
 
         print(self.labels)
