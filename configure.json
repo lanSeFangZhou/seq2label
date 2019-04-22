@@ -6,7 +6,7 @@
   "shuffle_pool_size": 1000,
   "batch_size": 32,
   "epochs": 10,
-  "max_steps": null,
+  "max_steps": 600,
   "max_steps_without_increase": 15000,
   "embedding_vocabulary_size": 128003,
   "embedding_dim": 300,
