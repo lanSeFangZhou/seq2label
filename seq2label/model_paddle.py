@@ -3,7 +3,6 @@ import pkg_resources
 import numpy as np
 
 from seq2label.trainer.train_model_paddle import train_model
-from seq2label.algorithms.text_cnn import TextCNN
 
 from seq2label import utils
 
@@ -101,7 +100,5 @@ class Model(object):
 
         # plus one for OOV
         params['embedding_vocabulary_size'] = len(params['vocab_data']) + 1
-
-        params.update(TextCNN.default_params())
 
         return params
