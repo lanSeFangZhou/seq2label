@@ -3,7 +3,7 @@ from setuptools import setup
 
 setup(
     name='seq2label',
-    version='0.0.1',
+    version='0.0.2',
     packages=setuptools.find_packages(),
     url='https://github.com/howl-anderson/seq2label',
     include_package_data=True,
